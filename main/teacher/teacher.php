@@ -21,6 +21,7 @@ if (isset($_SESSION['teacherId'])) {
             $studGender = $_POST["student-gender".$i];
             $studAge = $_POST["student-age".$i];
             $studBirthDate = $_POST["student-birthdate".$i];
+            $studContact = $_POST["student-contact".$i];
             $token = uniqid("",true);
             print_r($studLrn);
             print_r($studFname);
@@ -41,7 +42,8 @@ if (isset($_SESSION['teacherId'])) {
                 ":studBirthDate"=>$studBirthDate,
                 ":token"=>$token,
                 ":adviser"=>$teacherFullName,
-                ":section"=>$teacherSection
+                ":section"=>$teacherSection,
+                ":studContact"=>$studContact
             ];
               
             if (!empty($studLrn) && !empty($studFname) && !empty($studMinitial) && !empty($studLname) && !empty($studGender) && !empty($studAge) && !empty($studBirthDate)) {
@@ -64,7 +66,7 @@ if (isset($_SESSION['teacherId'])) {
 }
 
 function insertStud($conn, $data){
-    $stmt = $conn->prepare("INSERT INTO students(LRN, fname, minitial, lname, gender, age, birthdate, token, adviser, section) VALUES(:studLrn, :studFname, :studMinitial, :studLname, :studGender, :studAge, :studBirthDate, :token, :adviser, :section)");
+    $stmt = $conn->prepare("INSERT INTO students(LRN, fname, minitial, lname, gender, age, birthdate, token, adviser, section, contact_no) VALUES(:studLrn, :studFname, :studMinitial, :studLname, :studGender, :studAge, :studBirthDate, :token, :adviser, :section, :studContact)");
     $stmt->execute($data);
     print_r($data);
     if ($stmt->rowCount()>0) {

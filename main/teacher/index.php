@@ -37,10 +37,13 @@ if (isset($_SESSION['teacherId'])){
         <option value="female">Female</option>
         <option value="other">Other</option>
         </select>
-        
+        <label for = "age">Age</label>
         <input type="number" name="student-age<?= $i?>" id="ageField">
         <input type="date" name="student-birthdate<?= $i ?>" id="birthdateField">
+        <label for="contact">Contact no</label>
+        <input type="number" name="student-contact<?= $i ?>" id="contactField">
         <input type="hidden" value="<?= $studNo ?>" name="studNo">
+        
 
 <?php } ?>
     <input type="submit" value="Submit" id="submitStudForm">

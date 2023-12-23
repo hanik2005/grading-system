@@ -36,10 +36,14 @@ if(isset($_GET['user'])){
                 $studLrn = $result['LRN'];
                 $studAdviser = $result['adviser'];
                 $studFullName = $studFname. "_".$studLname;
-                $studGradesSem1 = $result['sem1_grades'];
-                $studGradesSem2 = $result['sem2_grades'];
-                $studGradesSem1Array = (empty($studGradesSem1))? "no grade" : explode(",", $studGradesSem1);
-                $studGradesSem2Array = (empty($studGradesSem2))? "no grade" : explode(",", $studGradesSem2);
+                $studGradesSem1Q1 = $result['firstQr_grades'];
+                $studGradesSem1Q2 = $result['secondQr_grades'];
+                $studGradesSem2Q3 = $result['thirdQr_grades'];
+                $studGradesSem2Q4 = $result['fourthQr_grades'];
+                $studGradesSem1Q1Array = (empty($studGradesSem1Q1))? "no grade" : explode(",", $studGradesSem1Q1);
+                $studGradesSem1Q2Array = (empty($studGradesSem1Q2))? "no grade" : explode(",", $studGradesSem1Q2);
+                $studGradesSem2Q3Array = (empty($studGradesSem2Q3))? "no grade" : explode(",", $studGradesSem2Q3);
+                $studGradesSem2Q4Array = (empty($studGradesSem2Q4))? "no grade" : explode(",", $studGradesSem2Q4);
                 $profilePath = (empty($studPfp)) ? "../../assets/profile/default.png" : "../../assets/profile/$studPfp";
                 
                 // Define the text to be encoded
@@ -57,11 +61,14 @@ if(isset($_GET['user'])){
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="student.js"></script>
                 <title>Document</title>
             </head>
             <body>
                 <form enctype="multipart/form-data" action="qr_handler.php" method="POST">
-                <input type="hidden" name="token" value="<?php echo $studToken ?>">
+                <input type="hidden" name="token" value="<?php echo $studToken ?>" id="userTokenHiddenField">
                 <label for="pfp">Profile:</label>
                 <input type="file" id="pfp" name="pfp"><br>
                 <img src="<?php echo $profilePath ?>" alt=""><br>
@@ -96,7 +103,8 @@ if(isset($_GET['user'])){
             <?php for($i = 0; $i<count($teacherSubjectsSem1Array); $i++){    ?>
             <tr>
                 <td><?php echo $teacherSubjectsSem1Array[$i]; ?></td>
-                <td><?php echo (!is_array($studGradesSem1Array)) ? $studGradesSem1Array : ((isset($studGradesSem1Array[$i])) ? $studGradesSem1Array[$i] : "no grade"); ?></td>
+                <td><?php echo (!is_array($studGradesSem1Q1Array)) ? $studGradesSem1Q1Array : ((isset($studGradesSem1Q1Array[$i])) ? $studGradesSem1Q1Array[$i] : "no grade"); ?></td>
+                <td><?php echo (!is_array($studGradesSem1Q2Array)) ? $studGradesSem1Q2Array : ((isset($studGradesSem1Q2Array[$i])) ? $studGradesSem1Q2Array[$i] : "no grade"); ?></td>
 
             </tr>
             <?php } ?>
@@ -119,13 +127,15 @@ if(isset($_GET['user'])){
             <?php for($i = 0; $i<count($teacherSubjectsSem2Array); $i++){    ?>
             <tr>
             <td><?php echo $teacherSubjectsSem2Array[$i]; ?></td>
-            <td><?php echo (!is_array($studGradesSem1Array)) ? $studGradesSem1Array : ((isset($studGradesSem1Array[$i])) ? $studGradesSem1Array[$i] : "no grade"); ?></td>
+            <td><?php echo (!is_array($studGradesSem2Q3Array)) ? $studGradesSem2Q3Array : ((isset($studGradesSem2Q3Array[$i])) ? $studGradesSem2Q3Array[$i] : "no grade"); ?></td>
+            <td><?php echo (!is_array($studGradesSem2Q4Array)) ? $studGradesSem2Q4Array : ((isset($studGradesSem2Q4Array[$i])) ? $studGradesSem2Q4Array[$i] : "no grade"); ?></td>
             </tr>
             <?php } ?>
             <!-- Add more rows as needed -->
         </tbody>
     </table>
-
+        <div><canvas id="performanceChart"></canvas></div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             </body>
             </html>
             <?php

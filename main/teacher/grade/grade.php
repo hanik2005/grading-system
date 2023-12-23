@@ -30,32 +30,55 @@ $grades = implode(",",$postData);
 echo $grades;
 $removeToken = removeFromString($grades, $userToken);
 $removeSem = removeFromString($removeToken, $sem);
-$grades = removeFromString($removeSem, $_POST['submit']);
-$finalGrades = "";
-// this is the problem
-if($quarter == 1) {
-    $finalGrades = $grades . " q1 ";
- } else if($quarter == 2){
-  $q1GradesWithQ = getQ1($conn, $userToken);
-  $array = explode(" q1 ", $q1GradesWithQ);
-  $string = implode(",", $array); 
-  print_r($string);
-  deleteSem1($conn, $userToken);
-  $q1Grades = removeFromString($q1GradesWithQ, $quarter);
-  print_r($q1Grades); 
-  $finalGrades= $q1Grades . $grades;
-}
-//,------------,//
-$stmt= $conn->prepare("UPDATE students SET $semGradeTable=:grades WHERE token=:token");
+$removeSubmit = removeFromString($removeSem, $_POST['submit']);
+$grades = removeFromString($removeSubmit, $quarter);
+
+if($quarter == 1 && $sem == 1) {
+    $stmt = $conn->prepare("UPDATE students SET firstQr_grades = :grades WHERE token=:token");
 $stmt->execute([
-    ':grades'=>$finalGrades,
-    ':token'=> $userToken
+   ":grades"=>$grades,
+   ':token'=> $userToken
 ]);
-if($stmt->rowCount()>0){
- echo "Successfully inserted data";
-}else{
- echo "not successfully inserted data";
+if($stmt->rowCount() > 0) {
+   echo "update success 1st";
+} else  {
+   echo "update failed 1st";
+  }
+} else if($quarter == 2 && $sem == 1) {
+    $stmt = $conn->prepare("UPDATE students SET secondQr_grades = :grades WHERE token=:token");
+$stmt->execute([
+   ":grades"=>$grades,
+   ':token'=> $userToken
+]);
+if($stmt->rowCount() > 0) {
+   echo "update success 2nd";
+} else  {
+   echo "update failed 2nd";
+  }
+}else if($quarter == 3 && $sem == 2) {
+    $stmt = $conn->prepare("UPDATE students SET thirdQr_grades = :grades WHERE token=:token");
+$stmt->execute([
+   ":grades"=>$grades,
+   ':token'=> $userToken
+]);
+if($stmt->rowCount() > 0) {
+   echo "update success 3rd";
+} else  {
+   echo "update failed 3rd";
+  }
+}else if($quarter == 4 && $sem == 2) {
+    $stmt = $conn->prepare("UPDATE students SET fourthQr_grades = :grades WHERE token=:token");
+$stmt->execute([
+   ":grades"=>$grades,
+   ':token'=> $userToken
+]);
+if($stmt->rowCount() > 0) {
+   echo "update success 4th";
+} else  {
+   echo "update failed 4th";
+  }
 }
+
 }
 function removeFromString($str, $item) {
     $parts = explode(',', $str);

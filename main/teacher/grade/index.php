@@ -28,6 +28,7 @@ var_dump($teacherSubjects);
 
 }
 function retrieveTeacherSubject($conn, $sem, $teacherId){
+    var_dump($sem);
     $semModified = "sem$sem"."_subjects";
     $stmt = $conn->prepare("SELECT * FROM teachers WHERE id=:teacherid");
     $stmt->execute([
@@ -36,7 +37,7 @@ function retrieveTeacherSubject($conn, $sem, $teacherId){
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if($stmt->rowCount()>0){
         // print_r($result);
-        return $result['sem1_subjects'];
+        return $result[$semModified];
     }else{
         return "1, 2, 3";
         
